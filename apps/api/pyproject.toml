@@ -1,0 +1,25 @@
+[project]
+name = "oceantrace-api"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+  "oceantrace-common",
+  "oceantrace-vision",
+  "oceantrace-drift",
+  "oceantrace-ais",
+  "oceantrace-attribution",
+  "oceantrace-rag",
+  "fastapi>=0.115.0",
+  "pydantic>=2.8.0",
+  "pydantic-settings>=2.4.0",
+  "sqlalchemy>=2.0.0",
+  "uvicorn[standard]>=0.30.0",
+  "structlog>=24.1.0",
+  "redis>=5.0.0",
+  "rq>=1.16.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+

@@ -1,0 +1,97 @@
+[project]
+name = "oceantrace"
+version = "0.1.0"
+description = "AI-assisted oil spill investigation foundation for SIH 26143."
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.115.0",
+  "pydantic>=2.8.0",
+  "pydantic-settings>=2.4.0",
+  "sqlalchemy>=2.0.0",
+  "alembic>=1.13.0",
+  "uvicorn[standard]>=0.30.0",
+  "structlog>=24.1.0",
+  "numpy>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "httpx>=0.27.0",
+  "mypy>=1.11.0",
+  "pytest>=8.3.0",
+  "ruff>=0.6.0",
+  "redis>=5.0.0",
+  "rq>=1.16.0",
+]
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = []
+
+[tool.uv.workspace]
+members = [
+  "apps/api",
+  "packages/common",
+  "packages/vision",
+  "packages/geospatial",
+  "packages/drift",
+  "packages/ais",
+  "packages/attribution",
+  "packages/rag",
+  "packages/knowledge",
+  "packages/agents",
+  "packages/evaluation",
+]
+
+[tool.uv.sources]
+oceantrace-common = { workspace = true }
+oceantrace-vision = { workspace = true }
+oceantrace-geospatial = { workspace = true }
+oceantrace-drift = { workspace = true }
+oceantrace-ais = { workspace = true }
+oceantrace-attribution = { workspace = true }
+oceantrace-rag = { workspace = true }
+oceantrace-knowledge = { workspace = true }
+oceantrace-agents = { workspace = true }
+oceantrace-evaluation = { workspace = true }
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "ANN"]
+
+[tool.ruff.lint.per-file-ignores]
+"apps/api/alembic/**" = ["E501"]
+"apps/api/src/oceantrace_api/db_models.py" = ["E501"]
+"apps/api/src/oceantrace_api/storage/rq_job_queue.py" = ["E501", "ANN002", "ANN003", "ANN401"]
+"apps/api/src/oceantrace_api/storage/inmemory_job_queue.py" = ["ANN002", "ANN003", "ANN401"]
+"apps/api/src/oceantrace_api/storage/job_queue.py" = ["ANN002", "ANN003", "ANN204", "ANN401"]
+"apps/api/src/oceantrace_api/storage/jobs.py" = ["ANN002", "ANN003", "ANN401"]
+"apps/api/src/oceantrace_api/db.py" = ["ANN201"]
+"apps/api/src/oceantrace_api/workers/jobs.py" = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["apps/api/tests", "tests"]
+pythonpath = [
+  "apps/api/src",
+  "packages/common",
+  "packages/vision",
+  "packages/geospatial",
+  "packages/drift",
+  "packages/ais",
+  "packages/attribution",
+  "packages/rag",
+  "packages/knowledge",
+  "packages/agents",
+  "packages/evaluation",
+]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+plugins = ["pydantic.mypy"]

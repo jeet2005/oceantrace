@@ -1,0 +1,56 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: oceantrace
+      POSTGRES_USER: oceantrace
+      POSTGRES_PASSWORD: oceantrace
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  qdrant:
+    image: qdrant/qdrant:v1.12.1
+    ports:
+      - "6333:6333"
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    environment:
+      OT_DATABASE_URL: postgresql+psycopg://oceantrace:oceantrace@postgres:5432/oceantrace
+      OT_REDIS_URL: redis://redis:6379/0
+      OT_QDRANT_URL: http://qdrant:6333
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+      - qdrant
+
+  worker:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    command: python -m oceantrace_api.workers
+    environment:
+      OT_DATABASE_URL: postgresql+psycopg://oceantrace:oceantrace@postgres:5432/oceantrace
+      OT_REDIS_URL: redis://redis:6379/0
+      OT_QDRANT_URL: http://qdrant:6333
+    depends_on:
+      - postgres
+      - redis
+      - qdrant
+
+volumes:
+  postgres_data:
+  redis_data:
