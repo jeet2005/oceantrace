@@ -2,9 +2,13 @@
 name = "oceantrace-vision"
 version = "0.1.0"
 requires-python = ">=3.12"
-dependencies = ["oceantrace-common", "pydantic>=2.8.0"]
+dependencies = [
+    "oceantrace-common",
+    "pydantic>=2.8.0",
+    "rasterio>=1.4.0",
+    "numpy>=2.0.0",
+]
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
-

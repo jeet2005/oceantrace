@@ -74,6 +74,8 @@ select = ["E", "F", "I", "B", "UP", "ANN"]
 "apps/api/src/oceantrace_api/storage/jobs.py" = ["ANN002", "ANN003", "ANN401"]
 "apps/api/src/oceantrace_api/db.py" = ["ANN201"]
 "apps/api/src/oceantrace_api/workers/jobs.py" = ["E501"]
+"packages/vision/oceantrace_vision/reader.py" = ["E501", "F841"]
+"packages/vision/oceantrace_vision/interfaces.py" = ["E402"]
 
 [tool.pytest.ini_options]
 testpaths = ["apps/api/tests", "tests"]
@@ -95,3 +97,11 @@ pythonpath = [
 python_version = "3.12"
 strict = true
 plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = "rasterio"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "rasterio.*"
+ignore_missing_imports = true
