@@ -4,7 +4,9 @@ version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = ["oceantrace-common", "pydantic>=2.8.0"]
 
+[project.optional-dependencies]
+parquet = ["pyarrow>=16.0.0"]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
-
