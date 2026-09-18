@@ -2,9 +2,15 @@
 name = "oceantrace-drift"
 version = "0.1.0"
 requires-python = ">=3.12"
-dependencies = ["oceantrace-common", "pydantic>=2.8.0"]
+dependencies = [
+    "oceantrace-common",
+    "pydantic>=2.8.0",
+    "numpy>=2.0.0",
+    "scipy>=1.10.0",
+    "shapely>=2.0.0",
+    "scikit-image>=0.22.0",
+]
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
-
