@@ -1,13 +1,17 @@
 from pathlib import Path
-from typing import Protocol
+from typing import Any, Protocol
 
 from pydantic import BaseModel, Field
 
 
 class SegmentationResult(BaseModel):
-    mask_path: Path | None = None
+    mask: "np.ndarray"  # binary mask [H, W]
+    probability_map: "np.ndarray | None" = None  # probability map [H, W]
     confidence: float = Field(ge=0, le=1)
     uncertainty: str
+    transform: Any  # rasterio Affine
+    crs: Any  # rasterio CRS
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class SatelliteModel(Protocol):
@@ -16,22 +20,27 @@ class SatelliteModel(Protocol):
     def segment(self, raster_path: Path) -> SegmentationResult:
         """Return an oil-slick segmentation result for one satellite raster."""
 
+    def segment_batch(self, raster_paths: list[Path]) -> list[SegmentationResult]:
+        """Segment multiple rasters."""
 
-class SentinelReader(Protocol):
-    def read_safe(self, safe_path: Path) -> "SentinelObservation":
-        """Read a Sentinel-1 SAFE product."""
+    def segment_array(self, array: "np.ndarray") -> SegmentationResult:
+        """Segment a pre-loaded numpy array."""
 
-    def read_geotiff(self, tiff_path: Path) -> "SentinelObservation":
-        """Read a GeoTIFF file."""
 
-    def calibrate(self, observation: "SentinelObservation") -> "SentinelObservation":
-        """Apply radiometric calibration."""
+class ModelRegistry(Protocol):
+    def register(self, name: str, model: SatelliteModel) -> None:
+        """Register a model."""
 
-    def to_db_scale(self, observation: "SentinelObservation") -> "SentinelObservation":
-        """Convert linear scale to dB."""
+    def get(self, name: str) -> SatelliteModel | None:
+        """Get a registered model."""
 
-    def normalize(self, observation: "SentinelObservation") -> "SentinelObservation":
-        """Normalize to [0, 1] range."""
+    def list_models(self) -> list[str]:
+        """List registered model names."""
+
+
+class CheckpointLoader(Protocol):
+    def load(self, checkpoint_path: Path, device: str = "cpu") -> SatelliteModel:
+        """Load model from checkpoint."""
 
 
 from dataclasses import dataclass
@@ -55,3 +64,12 @@ class SentinelObservation:
     product_type: str
     acquisition_time: str | None
     orbit_direction: str | None
+
+
+@dataclass(frozen=True)
+class Tile:
+    """A single tile from a larger raster."""
+    data: np.ndarray
+    transform: Affine
+    window: Any  # rasterio Window
+    tile_index: tuple[int, int]  # (row, col)

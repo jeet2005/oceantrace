@@ -78,6 +78,8 @@ select = ["E", "F", "I", "B", "UP", "ANN"]
 "packages/vision/oceantrace_vision/interfaces.py" = ["E402"]
 "packages/ais/oceantrace_ais/ingestion.py" = ["E501", "ANN401", "B007", "B904"]
 "packages/ais/oceantrace_ais/interfaces.py" = ["E402", "E501", "F401"]
+"packages/vision/oceantrace_vision/models.py" = ["E501", "ANN401"]
+"packages/vision/oceantrace_vision/postprocessing.py" = ["E501", "ANN401", "F401", "F821"]
 
 [tool.pytest.ini_options]
 testpaths = ["apps/api/tests", "tests"]
@@ -114,4 +116,36 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = "pyarrow.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "scipy"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "scipy.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "shapely"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "shapely.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "torch"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "torch.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "pyproj"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "pyproj.*"
 ignore_missing_imports = true
