@@ -83,6 +83,7 @@ select = ["E", "F", "I", "B", "UP", "ANN"]
 "packages/drift/oceantrace_drift/engine.py" = ["E501", "ANN204", "B007", "B905", "F401", "I001"]
 "packages/drift/oceantrace_drift/fields.py" = ["E501", "F401", "I001"]
 "packages/drift/oceantrace_drift/interfaces.py" = ["E501", "F401", "I001"]
+"packages/ais/oceantrace_ais/indexing.py" = ["E501", "F401", "I001"]
 
 [tool.pytest.ini_options]
 testpaths = ["apps/api/tests", "tests"]
